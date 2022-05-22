@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #result {
+            width: 200px;
+            height: 100px;
+            border: solid 1px red;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!--   <button>
+        点击发送请求
+    </button>
+    <div id="result"></div> -->
+
+    <button>
+        点击发送
+    </button>
+    <button>
+        点击取消       
+    </button>
+    <script>
+        const btn = document.querySelectorAll('button');
+        let xhr = null;
+        let isSending = false; //是否正在发送Ajax请求
+        btn[0].onclick = function() {
+            //判断标识变量
+            if (isSending) { //请求，第一次为false
+                xhr.abort();
+            }
+            isSending = true;
+            //请求正在发送，设置为true，在请求完成=false之前，不能重新发送
+            //第二次进入 设置为true
+            xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://127.0.0.1:3000/delay');
+            xhr.send();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    isSending = false;
+                    //请求完成，完成是需要一个过程的
+                    //这个过程中是有时间间隔的，这个时间内完成后，用户才能发送下一个请求
+                }
+
+            }
+        }
+        btn[1].addEventListener('click', function() {
+            xhr.abort(); //取消
+        });
+
+        /*         const result = document.getElementById('result');
+                const btn = document.querySelector('button'); */
+
+        //模拟延迟
+        /*       btn.addEventListener('click',function(){
+                  console.log('点击事件');
+                   const xhr = new XMLHttpRequest();
+                   //超时设置2s,如果2s内没有响应则timeout
+                   xhr.timeout = 2000;
+                   //超时回调
+                   xhr.ontimeout = function(){
+                       alert('请求超时了，请稍后再试');
+                   }
+                   xhr.onerror = function(){
+                       alert('你的网络似乎出了一些问题！');
+                   }
+                   xhr.open('GET','http://127.0.0.1:3000/delay?t='+Date.now());
+                   xhr.send();
+                   xhr.onreadystatechange = function(){
+                       if(xhr.readyState ===4){
+                           if(xhr.status>=200&&xhr.status<300){
+                               result.innerHTML = xhr.response;
+                           }
+                       }
+                   }
+              }); */
+
+        /*  模拟从后台取数据
+           btn.addEventListener('click',function(){
+                console.log("点击事件");
+                const xhr = new XMLHttpRequest();
+                console.log(xhr);
+                xhr.open('GET','http://127.0.0.1:3000/ie?t='+Date.now);
+                //因为用data.now使用时间戳解决有缓存的问题
+            // xhr.setRequestHeader('Content-Type'
+            //  ,'application/x-www-from-urlencoded');
+             xhr.send();
+               xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4){
+                        if(xhr.status >=200 &&xhr.status <300){
+                            //返回的数据是String字符串
+                            console.log(typeof xhr.response,xhr.response);   
+                           //Json对象转换后是Array，手动转换Json
+                            // let data =JSON.parse(xhr.response);
+                            console.log(xhr.response);
+                            result.innerHTML = xhr.response;
+                        }
+                    }
+                }
+
+
+            }); */
+
+
+
+        //创建对象
+        //  const xhr = new XMLHttpRequest();
+
+        //  //设置响应体数据的类型,不用再手动转换json
+
+        //  xhr.responseType = 'json';
+        //  //初始化
+        //  xhr.open('POST','http://127.0.0.1:3000/user');
+        //  //设置请求头,这是自带的请求头
+        //  xhr.setRequestHeader('Content-Type'
+        //  ,'application/x-www-from-urlencoded');
+        //  //这是自定义的请求头,自定义请求头需要服务器设置响应头
+        //  xhr.setRequestHeader('name','test3');
+
+        //  //发送
+        //  xhr.send('name=test3');
+        //  //绑定
+        // xhr.onreadystatechange = function(){
+        //     if(xhr.readyState === 4){
+        //         if(xhr.status >=200 &&xhr.status <300){
+        //             //返回的数据是String字符串
+        //             console.log(typeof xhr.response,xhr.response);   
+        //            //Json对象转换后是Array，手动转换Json
+        //             // let data =JSON.parse(xhr.response);
+        //             console.log(xhr.response);
+        //             result.innerHTML = xhr.response[0].name;
+        //         }
+        //     }
+        // }
+
+
+        //get方法
+        //1、创建对象 
+        // console.log('点击按钮了');
+        // const xhr = new XMLHttpRequest();
+        // console.log(xhr);
+        // //2、初始化，设置请求方法和url
+        // xhr.open('GET','http://127.0.0.1:3000/user?name=test');
+        // //3、发送
+        // xhr.send();
+        // //4、事件绑定 处理服务器端返回的结果
+        // //on  when 当...时候
+        // //readystate 是xhr对象中的属性。表示状态0 1 2 3 4
+        // //change 改变
+        // xhr.onreadystatechange = function(){
+        //     //判断（服务端返回了所有的结果）
+        //     if(xhr.readyState === 4){
+        //         //判断响应状态码 200 404 403 401 500
+        //         //2xx 成功
+        //     if(xhr.status >= 200 && xhr.status < 300){
+        //          //处理结果 行 头 空行 体
+        //          //1、响应行
+        //         //  console.log(xhr.status);//状态码 200
+        //         //  console.log(xhr.statusText);//状态字符串 ok
+        //         //  console.log(xhr.getAllResponseHeaders());//得到响应头
+        //         //  console.log(xhr.response);//响应体
+        //         result.innerHTML = xhr.response;
+        //     }else{
+
+        //     }
+        //     }
+
+        // }
+    </script>
+</body>
+
+</html>
